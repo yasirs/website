@@ -1,0 +1,276 @@
+<!DOCTYPE html><html><head>
+    <title>
+  Use R with Stencila : Stencila
+</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+    
+
+    <link rel="stylesheet" href="/css/materia.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/css/docsearch.min.css">
+    <link rel="stylesheet" href="/css/website.css">
+    
+<style type="text/css">
+  main .content {
+    min-height: 60vh;
+  }
+
+  main .menu {
+    padding-top: 4em;
+    padding-left: 2em;
+  }
+
+  main .steps {
+    margin-top: 2em;
+  }
+
+  main .prev,
+  main .next {
+    font-size: 1.2em;
+  }
+
+  main .prev {
+    float: left;
+  }
+
+  main .next {
+    float: right;
+  }
+</style>
+<link rel="stylesheet" href="/css/prism.css">
+
+  </head>
+  <body>
+    <header class="header">
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/"><img src="/img/logo-name.png" alt="Stencila"></a>
+        <div class="navbar-burger"><span></span><span></span><span></span></div>
+      </div>
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="/use">Use</a>
+          <a class="navbar-item" href="/learn/intro.html">Learn</a>
+          <a class="navbar-item" href="/contribute">Contribute</a>
+        </div>
+        <div class="navbar-end">
+          <!--
+          Search temporarily disabled. See issue #2
+          <div class="navbar-item">
+            <div class="field">
+              <p class="control">
+                <input id="search" class="input" type="search" placeholder="Search">
+              </p>
+            </div>
+          </div>
+          -->
+          <a class="navbar-item" href="/community">Community</a>
+          <a class="navbar-item" href="/blog">Blog</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+    
+<main class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-2">Use R with Stencila</h2>
+          <p><img src="../img/r-context.png" alt="Stencila R Context" style="display: inline; width: 25%; margin: 0 auto; padding-right: 1em; padding-top: 1em; float: left;"></p>
+<p>Stencila allows you use interactive R code within Stencila articles, notebooks and sheets.
+In order to be able to use R within Stencila documents you need to
+<a href="#installation">enable the execution context</a>.</p>
+<p>You can write R code
+just like you would in any other editor or reproducible notebook. You can install R packages and import them,
+create and embed plots, and so on.</p>
+<p>You can write the contents of Stencila cells in R as well as make your existing R functions available in Stencila through <a href="#functions">function libraries</a>.</p>
+<h2 id="installation">Installation</h2>
+<blockquote class="warning">
+<p> We are currently working on making the Stencila R package compatible with the latest Stencila Desktop. During that process, not all functionality may be available.</p>
+</blockquote>
+<p>The <a href="https://github.com/stencila/r">Stencila R package</a> provides a <code>RContext</code> for executing R code and functions from within Stencila documents.</p>
+<p>The package is not yet available on CRAN, so you need to install directly from our Github repository using the <a href="https://github.com/hadley/devtools"><code>devtools</code></a> package.</p>
+<blockquote class="tip">
+<p> You may need to install <code>devtools</code> first using <code>install.packages(&quot;devtools&quot;)</code> from within an R session</p>
+</blockquote>
+<p>Launch a R session on your machine and type:</p>
+<pre><code class="language-r">devtools::install_github(&quot;stencila/r&quot;)
+</code></pre>
+<p>Then register the package&apos;s manifest so that it can be found by the Stencila Desktop and other Stencila packages,</p>
+<pre><code class="language-r">stencila:::register()
+</code></pre>
+<h2 id="code-execution">Code execution</h2>
+<p>Stencila keeps track of the code dependecies between the code cells. It supports reactive programming which means that the code and the respective outputs
+will get updated, when you change a piece of code they depend on. It is a similar principle as behind the behavior of spreadsheet applications.
+You can refer to specific outputs from any code cell in any part of your Stencila document. Stencila does all this using its <a href="">execution engine</a>.</p>
+<p>What inputs and outputs of a code cell are vary slightly between programming languages that you use in Stencila.  For cells written in R,
+if you want to capture the output of the cell so that you can refer to it throughout the document, you need to create a variable and assign (<code>&lt;-</code>) the output. To be more precise, you are capturing the <em>result of the evaluation of the cell</em>.
+Note that, the variables in Stencila are non-mutable.</p>
+<p>For example:</p>
+<pre><code class="language-r">x &lt;- 4
+y &lt;- sqrt(x)
+</code></pre>
+<p>Now you can refer to the output of the cell using the variable <code>y</code>.</p>
+<p>If you do not capture the output explicitly, you will not be able to refer to it later on. For example:</p>
+<pre><code class="language-r">x &lt;- 4
+sqrt(x)
+</code></pre>
+<p>The result of the <code>sqrt(x)</code> is <code>2</code> but you will not be able to refer to it since it has not been captured explicitly in a variable.
+Summarizing: the output of this cell is not captured and the result of evaluating this cell is <code>2</code> (<code>sqrt(4)</code>).</p>
+<h2 id="data-interchange">Data interchange</h2>
+<p>Stencila provides you with ability to use multiple programming languages to write interactive code within
+one document, working on the same data. In other words, you can manipulate the same data switching between different programming
+languages. This capability is achieved through <code>data interchange</code> feature.</p>
+<p>When you pass data between cells Stencila temporarily converts it into its internal schema representation.
+The table below shows (roughly) how data interchange between the schema and R is implemented. For more details
+see <a href="https://github.com/stencila/r/blob/master/R/type.R">source code</a>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Schema representation</th>
+<th style="text-align:left">R</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Boolean</td>
+<td style="text-align:left">logical</td>
+</tr>
+<tr>
+<td style="text-align:left">Integer</td>
+<td style="text-align:left">integer</td>
+</tr>
+<tr>
+<td style="text-align:left">Float</td>
+<td style="text-align:left">numeric</td>
+</tr>
+<tr>
+<td style="text-align:left">String</td>
+<td style="text-align:left">character</td>
+</tr>
+<tr>
+<td style="text-align:left">Array</td>
+<td style="text-align:left">R vector</td>
+</tr>
+<tr>
+<td style="text-align:left">Object*</td>
+<td style="text-align:left">R list</td>
+</tr>
+<tr>
+<td style="text-align:left">Table</td>
+<td style="text-align:left">DataFrame, matrix</td>
+</tr>
+<tr>
+<td style="text-align:left">Plot</td>
+<td style="text-align:left">recordedplot, ggplot</td>
+</tr>
+</tbody>
+</table>
+<p>*The object fields and methods are saved within the schema-defined object/array and converted accordingly.</p>
+
+        </div>
+        <div class="steps">
+          
+          
+        </div>
+      </div>
+      <div class="column is-one-quarter">
+        <aside class="menu">
+  <p class="menu-label">
+    Getting started
+  </p>
+  <ul class="menu-list">
+    <li><a href="/learn/intro.html">Introduction</a></li>
+    <li><a href="/use/install.html">Installation</a></li>
+    <!-- <li><a href="/learn/getting-started/quick-start.html">Quick start</a></li> -->
+    <li><a href="/learn/faq.html">FAQ</a></li>
+  </ul>
+  <!-- <p class="menu-label">
+    Computation
+  </p> -->
+  <ul class="menu-list">
+    <!-- <li><a href="/learn/computation/data.html">Data</a></li> -->
+    <!-- <li><a href="/learn/computation/operations.html">Operations</a></li> -->
+    <!-- <li><a href="/learn/computation/contexts.html">Contexts</a></li> -->
+    <!-- <li><a href="/learn/computation/engine.html">Engine</a></li> -->
+    <!-- <li><a href="/learn/computation/functions.html">Functions</a></li> -->
+  </ul>
+  <p class="menu-label">
+    Languages
+  </p>
+  <ul class="menu-list">
+    <li><a href="/learn/languages/mini.html">Mini</a></li>
+    <li><a href="/learn/languages/javascript.html">Javascript</a></li>
+    <li><a href="/learn/languages/python.html">Python</a></li>
+    <li><a href="/learn/languages/r.html">R</a></li>
+    <li><a href="/learn/languages/sql.html">SQL</a></li>
+  </ul>
+
+  <p class="menu-label">
+    Integrations
+  </p>
+  <ul class="menu-list">
+    <li><a href="/learn/integrations/converters.html">Converters</a></li>
+  </ul>
+</aside>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+    <footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <h4 class="title is-6 has-text-grey-light"> About </h4>
+        <a href="/use">Use </a> <br>
+        <a href="/learn"> Learn </a> <br>
+        <a href="/learn/faq.html"> FAQ  </a>  <br>
+      </div>
+      <div class="column">
+        <h4 class="title is-6 has-text-grey-light"> Community </h4>
+        <a href="/contribute"> Contribute </a> <br>
+        <a href="/community/beta-testing.html"> Beta Testing </a> <br>
+        <a href="/community/resources.html"> Resources  </a>  <br>
+        <a href="/blog"> Blog  </a>  <br>
+      </div>
+      <div class="column">
+        <h4 class="title is-6 has-text-grey-light"> Contact </h4>
+        <a href="mailto:hello@stenci.la">Email </a> <br>
+        <a href="https://twitter.com/stencila"> Twitter </a> <br>
+        <a href="https://gitter.im/stencila/stencila"> Gitter Chat </a>  <br>
+        <a href="https://community.stenci.la/"> Community Forum  </a>  <br>
+        <a id="edit-page" class="button" href="https://github.com/stencila/website/edit/master/src/learn/languages/r.md" target="_blank" title="Edit this page">&#x270E; Edit</a>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column has-text-grey-light has-text-centered">
+          &#xA9; 2018 Stencila <a href="https://github.com/stencila/stencila/graphs/contributors">contributors</a>
+      </div>
+   </div>
+  </div>
+</footer>
+
+  
+  
+
+  <script type="text/javascript" src="/js/docsearch.min.js"></script>
+  <script type="text/javascript" src="/js/website.js"></script>
+  
+<script type="text/javascript" src="/js/prism.js"></script>
+<script type="text/javascript" src="/js/prism-bash.min.js"></script>
+<script type="text/javascript" src="/js/prism-json.min.js"></script>
+<script type="text/javascript" src="/js/prism-mini.js"></script>
+<script type="text/javascript" src="/js/prism-python.min.js"></script>
+<script type="text/javascript" src="/js/prism-r.min.js"></script>
+<script type="text/javascript" src="/js/prism-sql.min.js"></script>
+
+
+</body></html>

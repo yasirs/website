@@ -1,0 +1,151 @@
+<!DOCTYPE html><html><head>
+    <title>Stencila in Binder : Stencila</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+    
+  
+    <link rel="stylesheet" href="/css/materia.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/css/docsearch.min.css">
+    <link rel="stylesheet" href="/css/website.css">
+    
+  <style type="text/css">
+    article {
+      margin-bottom: 5em;
+      padding-bottom: 2em;
+      border-bottom: 1px solid #EEE;
+    }
+    article.content img {
+      display: block;
+      width: 90%;
+      margin: 0 auto;
+    }
+    #suggested {
+      color: #777;
+    }
+    #discourse-comments {
+      margin-top: 4em;
+    }
+  </style>
+  <link rel="stylesheet" href="/css/prism.css">
+
+  </head>
+  <body>
+    <header class="header">
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/"><img src="/img/logo-name.png" alt="Stencila"></a>
+        <div class="navbar-burger"><span></span><span></span><span></span></div>
+      </div>
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="/use">Use</a>
+          <a class="navbar-item" href="/learn/intro.html">Learn</a>
+          <a class="navbar-item" href="/contribute">Contribute</a>
+        </div>
+        <div class="navbar-end">
+          <!--
+          Search temporarily disabled. See issue #2
+          <div class="navbar-item">
+            <div class="field">
+              <p class="control">
+                <input id="search" class="input" type="search" placeholder="Search">
+              </p>
+            </div>
+          </div>
+          -->
+          <a class="navbar-item" href="/community">Community</a>
+          <a class="navbar-item" href="/blog">Blog</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+    
+  <main class="section">
+    <div class="container">
+      <article class="content">
+        <h2 class="title is-2">Stencila in Binder</h2>
+        <h3 class="is-3">Aleksandra Pawlik, 11 May 2018</h3>
+        <p>At the recent eLife sprint in Cambridge <a href="https://twitter.com/nordholmen">Daniel N&#xFC;st</a> and <a href="https://github.com/minrk">Min Ragan-Kelley</a> of Project Jupyter had chosen to do a project involving Stencila.
+Nokome Bentley joined them remotely and as a result  you can now run Stencila projects on Binder connecting to a Jupyter kernel.</p>
+<p><a href="https://twitter.com/eLifeInnovation/status/994583390895697920"><img src="eLife-sprint.png" alt="eLife Sprint"></a></p>
+<p>The project is putting the Stencila editor into a Docker container that can be launch with <a href="mybinder.org">Binder</a> enabling editing of <a href="https://github.com/substance/dar">Dar archives</a>. Check out the <a href="https://github.com/minrk/jupyter-dar">Github repository</a>.</p>
+<p>Nokome spent the day working on adding support for running code cells. Since the base <code>jupyter/minimal-notebook</code> image already has a Jupyter kernel for Python installed he decided to enable Stencila&apos;s <code>JupyterContext</code>. It acts as a bridge between Stencila&apos;s API and Jupyter kernels. Nokome included the <code>stencila-node</code> Node.js package in the Docker image which provides the <code>JupyterContext</code> as well as a <code>NodeContext</code> (for executing Javascript) and a <code>SqliteContext</code> (for executing SQL).</p>
+<p>Here&apos;s the result: a Stencila project running on Binder connecting to a Jupyter kernel</p>
+<p><a href="https://mybinder.org/v2/gh/nokome/jupyter-dar/add-stencila-host?urlpath=%2Fstencila%2F"><img src="stencila-binder.png" alt="Stencila in Binder"></a></p>
+
+      </article>
+      
+      <div id="discourse-comments">
+      </div>
+    </div>
+  </main>
+
+    <footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <h4 class="title is-6 has-text-grey-light"> About </h4>
+        <a href="/use">Use </a> <br>
+        <a href="/learn"> Learn </a> <br>
+        <a href="/learn/faq.html"> FAQ  </a>  <br>
+      </div>
+      <div class="column">
+        <h4 class="title is-6 has-text-grey-light"> Community </h4>
+        <a href="/contribute"> Contribute </a> <br>
+        <a href="/community/beta-testing.html"> Beta Testing </a> <br>
+        <a href="/community/resources.html"> Resources  </a>  <br>
+        <a href="/blog"> Blog  </a>  <br>
+      </div>
+      <div class="column">
+        <h4 class="title is-6 has-text-grey-light"> Contact </h4>
+        <a href="mailto:hello@stenci.la">Email </a> <br>
+        <a href="https://twitter.com/stencila"> Twitter </a> <br>
+        <a href="https://gitter.im/stencila/stencila"> Gitter Chat </a>  <br>
+        <a href="https://community.stenci.la/"> Community Forum  </a>  <br>
+        <a id="edit-page" class="button" href="https://github.com/stencila/website/edit/master/src/blog/2018-05-stencila-in-binder/index.md" target="_blank" title="Edit this page">&#x270E; Edit</a>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column has-text-grey-light has-text-centered">
+          &#xA9; 2018 Stencila <a href="https://github.com/stencila/stencila/graphs/contributors">contributors</a>
+      </div>
+   </div>
+  </div>
+</footer>
+
+  
+  
+  
+  <script type="text/javascript" src="/js/docsearch.min.js"></script>
+  <script type="text/javascript" src="/js/website.js"></script>
+  
+
+  <script type="text/javascript" src="/js/prism.js"></script>
+  <script type="text/javascript" src="/js/prism-bash.min.js"></script>
+  <script type="text/javascript" src="/js/prism-json.min.js"></script>
+  <script type="text/javascript" src="/js/prism-markdown.min.js"></script>
+  <script type="text/javascript" src="/js/prism-mini.js"></script>
+  <script type="text/javascript" src="/js/prism-python.min.js"></script>
+  <script type="text/javascript" src="/js/prism-r.min.js"></script>
+  <script type="text/javascript" src="/js/prism-sql.min.js"></script>
+
+  <script type="text/javascript">
+    DiscourseEmbed = {
+      discourseUrl: 'https://community.stenci.la/',
+      discourseEmbedUrl: window.location.href,
+      topicId: 142
+    };
+    (function() {
+      var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;
+      d.src = DiscourseEmbed.discourseUrl + 'javascripts/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(d);
+    })();
+  </script>
+
+
+</body></html>
